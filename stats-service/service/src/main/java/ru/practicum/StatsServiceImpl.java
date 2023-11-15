@@ -32,12 +32,14 @@ public class StatsServiceImpl implements StatsService {
     public List<ViewStats> getStats(String start, String end, Set<String> uris, boolean unique) {
         LocalDateTime startTime = LocalDateTime.parse(URLDecoder.decode(start, StandardCharsets.UTF_8), formatter);
         LocalDateTime endTime = LocalDateTime.parse(URLDecoder.decode(end, StandardCharsets.UTF_8), formatter);
-        List<ViewStats> allStats = unique
+        List<ViewStats> stats = unique
                 ? statsRepository.getStatsWithUnique(startTime, endTime)
                 : statsRepository.getStatsWithoutUnique(startTime, endTime);
-        List<ViewStats> stats = allStats.stream()
-                .filter(stat -> uris.contains(stat.getUri()))
-                .collect(Collectors.toList());
+        if (uris != null && !uris.isEmpty()) {
+            stats = stats.stream()
+                    .filter(stat -> uris.contains(stat.getUri()))
+                    .collect(Collectors.toList());
+        }
         log.info("Возвращен список статистики: {}", stats);
 
         return stats;

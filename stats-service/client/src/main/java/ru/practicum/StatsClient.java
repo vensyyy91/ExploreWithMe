@@ -35,11 +35,10 @@ public class StatsClient {
         Map<String, Object> parameters = Map.of(
                 "start", URLEncoder.encode(start, StandardCharsets.UTF_8),
                 "end", URLEncoder.encode(end, StandardCharsets.UTF_8),
-                "uris", uris,
                 "unique", unique
         );
         StringBuilder path = new StringBuilder("/stats?start={start}&end={end}&unique={unique}");
-        if (!uris.isEmpty()) {
+        if (uris != null && !uris.isEmpty()) {
             for (String uri : uris) {
                 path.append("&uris=").append(uri);
             }
