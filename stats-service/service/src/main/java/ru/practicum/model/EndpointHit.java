@@ -1,4 +1,4 @@
-package ru.practicum;
+package ru.practicum.model;
 
 import lombok.*;
 
@@ -13,6 +13,7 @@ import java.util.Objects;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class EndpointHit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

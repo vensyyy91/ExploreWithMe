@@ -16,7 +16,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Slf4j
 @Validated
-public class StatsController {
+public class StatsClientController {
     private final StatsClient statsClient;
 
     @PostMapping("/hit")
