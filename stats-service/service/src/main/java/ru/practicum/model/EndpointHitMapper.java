@@ -9,7 +9,7 @@ import java.time.format.DateTimeParseException;
 
 @UtilityClass
 public class EndpointHitMapper {
-    private final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public EndpointHit fromDto(EndpointHitDto endpointHitDto) {
         try {
