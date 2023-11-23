@@ -1,4 +1,4 @@
-package ru.practicum;
+package ru.practicum.compilation;
 
 import ru.practicum.compilation.CompilationDto;
 import ru.practicum.compilation.NewCompilationDto;

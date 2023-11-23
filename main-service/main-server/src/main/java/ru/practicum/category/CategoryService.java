@@ -1,4 +1,4 @@
-package ru.practicum;
+package ru.practicum.category;
 
 import ru.practicum.category.CategoryDto;
 import ru.practicum.category.NewCategoryDto;

@@ -1,6 +1,8 @@
 package ru.practicum.event;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import ru.practicum.category.CategoryDto;
 import ru.practicum.enums.State;
@@ -10,13 +12,14 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @AllArgsConstructor
+@Builder
 public class EventFullDto {
-    private long id;
+    private Long id;
     @NotNull
     private String annotation;
     @NotNull
     private CategoryDto category;
-    private int confirmedRequests;
+    private Integer confirmedRequests;
     private String createdOn;
     private String description;
     @NotNull
@@ -26,12 +29,12 @@ public class EventFullDto {
     @NotNull
     private Location location;
     @NotNull
-    private boolean paid;
-    private int participantLimit;
+    private Boolean paid;
+    private Integer participantLimit;
     private String publishedOn;
-    private boolean requestModeration;
+    private Boolean requestModeration;
     private State state;
     @NotNull
     private String title;
-    private long views;
+    private Long views;
 }

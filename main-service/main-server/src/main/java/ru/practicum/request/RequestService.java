@@ -1,6 +1,4 @@
-package ru.practicum;
-
-import ru.practicum.event.ParticipationRequestDto;
+package ru.practicum.request;
 
 import java.util.List;
 

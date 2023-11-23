@@ -18,7 +18,7 @@ import java.util.Set;
 
 @Service
 public class StatsClient {
-    protected final RestTemplate rest;
+    private final RestTemplate rest;
 
     public StatsClient(@Value("${stats-server.url}") String serverUrl, RestTemplateBuilder builder) {
         this.rest = builder

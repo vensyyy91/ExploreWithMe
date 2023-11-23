@@ -1,13 +1,12 @@
-package ru.practicum;
+package ru.practicum.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.user.NewUserRequest;
-import ru.practicum.user.UserDto;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -18,18 +17,18 @@ public class AdminUserController {
     private final UserService userService;
 
     @GetMapping
-    public UserDto getUsers(@RequestParam Set<Integer> ids,
-                            @RequestParam(defaultValue = "0") int from,
-                            @RequestParam(defaultValue = "10") int size) {
+    public List<UserDto> getUsers(@RequestParam(required = false) Set<Long> ids,
+                                  @RequestParam(defaultValue = "0") int from,
+                                  @RequestParam(defaultValue = "10") int size) {
         log.info("Получен запрос GET /admin/users");
         return userService.getUsers(ids, from, size);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDto addUser(@RequestBody @Valid NewUserRequest user) {
+    public UserDto addUser(@RequestBody @Valid NewUserRequest newUserRequest) {
         log.info("Получен запрос POST /admin/users");
-        return userService.addUser(user);
+        return userService.addUser(newUserRequest);
     }
 
     @DeleteMapping("/{userId}")
