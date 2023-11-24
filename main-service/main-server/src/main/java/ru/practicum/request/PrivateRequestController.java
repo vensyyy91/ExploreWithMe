@@ -24,7 +24,7 @@ public class PrivateRequestController {
     @ResponseStatus(HttpStatus.CREATED)
     public ParticipationRequestDto addNewRequest(@PathVariable long userId,
                                                  @RequestParam long eventId) {
-        log.info("Получен запрос POST /users/{}/requests", userId);
+        log.info("Получен запрос POST /users/{}/requests?eventId={}", userId, eventId);
         return requestService.addNewRequest(userId, eventId);
     }
 

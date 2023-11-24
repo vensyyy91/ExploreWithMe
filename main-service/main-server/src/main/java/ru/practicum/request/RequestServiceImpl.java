@@ -57,6 +57,9 @@ public class RequestServiceImpl implements RequestService {
                 .status(!event.getRequestModeration() || event.getParticipantLimit() == 0 ? Status.CONFIRMED : Status.PENDING)
                 .build();
         Request newRequest = requestRepository.save(request);
+        if (request.getStatus() == Status.CONFIRMED) {
+            event.setConfirmedRequests(event.getConfirmedRequests() + 1);
+        }
         log.info("Добавлен запрос: {}", newRequest);
 
         return RequestMapper.toDto(newRequest);
@@ -67,7 +70,7 @@ public class RequestServiceImpl implements RequestService {
     public ParticipationRequestDto cancelRequest(long userId, long requestId) {
         getUser(userId);
         Request request = getRequest(requestId);
-        request.setStatus(Status.PENDING);
+        request.setStatus(Status.CANCELED);
         log.info("Отменен запрос: {}", request);
 
         return RequestMapper.toDto(request);

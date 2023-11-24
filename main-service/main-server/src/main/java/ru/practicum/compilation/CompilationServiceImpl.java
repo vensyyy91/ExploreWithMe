@@ -23,11 +23,17 @@ public class CompilationServiceImpl implements CompilationService {
     private final EventRepository eventRepository;
 
     @Override
-    public List<CompilationDto> getCompilations(boolean pinned, int from, int size) {
-        List<Compilation> compilations = compilationRepository.findAllByPinned(
-                pinned,
-                PageRequest.of(from / size, size)
-        ).getContent();
+    public List<CompilationDto> getCompilations(Boolean pinned, int from, int size) {
+        List<Compilation> compilations;
+        if (pinned != null) {
+            compilations = compilationRepository.findAllByPinned(
+                    pinned,
+                    PageRequest.of(from / size, size)
+            ).getContent();
+        } else {
+            compilations = compilationRepository.findAll(PageRequest.of(from / size, size)).getContent();
+        }
+
         log.info("Возвращен список подборок: {}", compilations);
 
         return compilations.stream().map(CompilationMapper::toDto).collect(Collectors.toList());
@@ -44,7 +50,10 @@ public class CompilationServiceImpl implements CompilationService {
     @Override
     @Transactional
     public CompilationDto createCompilation(NewCompilationDto newCompilationDto) {
-        Set<Event> events = new HashSet<>(eventRepository.findAllById(newCompilationDto.getEvents()));
+        Set<Event> events = new HashSet<>();
+        if (newCompilationDto.getEvents() != null) {
+            events.addAll(eventRepository.findAllById(newCompilationDto.getEvents()));
+        }
         Compilation compilation = CompilationMapper.fromDto(newCompilationDto, events);
         Compilation newCompilation = compilationRepository.save(compilation);
         log.info("Добавлена новая подборка: {}", newCompilation);
@@ -68,7 +77,7 @@ public class CompilationServiceImpl implements CompilationService {
         Boolean pinnedForUpdate = updateCompilationRequest.getPinned();
         String titleForUpdate = updateCompilationRequest.getTitle();
         if (eventsForUpdate != null) {
-            compilation.setEvents(new HashSet<>(eventRepository.findAllById(eventsForUpdate))); //TODO: event not found???
+            compilation.setEvents(new HashSet<>(eventRepository.findAllById(eventsForUpdate)));
         }
         if (pinnedForUpdate != null) {
             compilation.setPinned(pinnedForUpdate);

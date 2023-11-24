@@ -1,13 +1,9 @@
 package ru.practicum.compilation;
 
-import ru.practicum.compilation.CompilationDto;
-import ru.practicum.compilation.NewCompilationDto;
-import ru.practicum.compilation.UpdateCompilationRequest;
-
 import java.util.List;
 
 public interface CompilationService {
-    List<CompilationDto> getCompilations(boolean pinned, int from, int size);
+    List<CompilationDto> getCompilations(Boolean pinned, int from, int size);
 
     CompilationDto getCompilationById(long compId);
 

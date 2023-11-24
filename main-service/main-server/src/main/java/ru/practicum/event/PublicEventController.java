@@ -29,9 +29,9 @@ public class PublicEventController {
                                         @RequestParam(defaultValue = "0") int from,
                                         @RequestParam(defaultValue = "10") int size,
                                         HttpServletRequest request) {
-        String uri = request.getRequestURI();
-        String ip = request.getRemoteAddr();
-        log.info("Получен запрос GET /events");
+        log.info("Получен запрос GET /events?from={}&size={}\n" +
+                "Параметры:\ntext={}\ncategories={}\npaid={}\nrangeStart={}\nrangeEnd={}\nonlyAvailable={}\nsort={}",
+                from, size, text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort);
         return eventService.getPublishedEvents(
                 text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size, request
         );
@@ -39,8 +39,6 @@ public class PublicEventController {
 
     @GetMapping("/{id}")
     public EventFullDto getEventById(@PathVariable long id, HttpServletRequest request) {
-        String uri = request.getRequestURI();
-        String ip = request.getRemoteAddr();
         log.info("Получен запрос GET /events/{}", id);
         return eventService.getPublishedEventById(id, request);
     }

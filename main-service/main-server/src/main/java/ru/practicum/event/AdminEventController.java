@@ -23,14 +23,16 @@ public class AdminEventController {
                                         @RequestParam(required = false) String rangeEnd,
                                         @RequestParam(defaultValue = "0") int from,
                                         @RequestParam(defaultValue = "10") int size) {
-        log.info("Получен запрос GET /admin/events");
+        log.info("Получен запрос GET /admin/events?from={}&size={}\n" +
+                "Параметры:\nusers={}\nstates={}\ncategories={}\nrangeStart={}\nrangeEnd={}",
+                from, size, users, states, categories, rangeStart, rangeEnd);
         return eventService.getAllEvents(users, states, categories, rangeStart, rangeEnd, from, size);
     }
 
     @PatchMapping("/{eventId}")
     public EventFullDto updateEvent(@PathVariable long eventId,
                                     @RequestBody @Valid UpdateEventAdminRequest updateEventAdminRequest) {
-        log.info("Получен запрос PATCH /admin/events/{}", eventId);
+        log.info("Получен запрос PATCH /admin/events/{}\nТело запроса: {}", eventId, updateEventAdminRequest);
         return eventService.updateEventByAdmin(eventId, updateEventAdminRequest);
     }
 }

@@ -18,28 +18,11 @@ public class CompilationMapper {
                 .build();
     }
 
-    /*public Compilation fromDto(CompilationDto compilationDto) {
-        return Compilation.builder()
-                .id(compilationDto.getId())
-                .events(compilationDto.getEvents().stream().map(EventMapper::fromDto).collect(Collectors.toSet()))
-                .pinned(compilationDto.getPinned())
-                .title(compilationDto.getTitle())
-                .build();
-    }*/
-
     public Compilation fromDto(NewCompilationDto newCompilationDto, Set<Event> events) {
         return Compilation.builder()
                 .events(events)
-                .pinned(newCompilationDto.getPinned())
+                .pinned(newCompilationDto.getPinned() != null && newCompilationDto.getPinned())
                 .title(newCompilationDto.getTitle())
                 .build();
     }
-
-    /*public Compilation fromDto(UpdateCompilationRequest request, Set<Event> events) {
-        return Compilation.builder()
-                .events(events)
-                .pinned(request.getPinned())
-                .title(request.getTitle())
-                .build();
-    }*/
 }

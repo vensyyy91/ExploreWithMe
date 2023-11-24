@@ -12,6 +12,7 @@
     <artifactId>main-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
+    <name>EWM Main Service</name>
     <modules>
         <module>main-dto</module>
         <module>main-server</module>

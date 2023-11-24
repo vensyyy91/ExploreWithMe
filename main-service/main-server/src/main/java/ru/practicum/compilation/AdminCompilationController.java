@@ -17,7 +17,7 @@ public class AdminCompilationController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CompilationDto addCompilation(@RequestBody @Valid NewCompilationDto newCompilationDto) {
-        log.info("Получен запрос POST /admin/compilations");
+        log.info("Получен запрос POST /admin/compilations\nТело запроса: {}", newCompilationDto);
         return compilationService.createCompilation(newCompilationDto);
     }
 
@@ -31,7 +31,7 @@ public class AdminCompilationController {
     @PatchMapping("/{compId}")
     public CompilationDto updateCompilation(@PathVariable long compId,
                                             @RequestBody @Valid UpdateCompilationRequest updateCompilationRequest) {
-        log.info("Получен запрос PATCH /admin/compilations/{}", compId);
+        log.info("Получен запрос PATCH /admin/compilations/{}\nТело запроса: {}", compId, updateCompilationRequest);
         return compilationService.updateCompilation(compId, updateCompilationRequest);
     }
 }

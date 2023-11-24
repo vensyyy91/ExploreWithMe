@@ -27,7 +27,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -179,9 +178,10 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<ParticipationRequestDto> getUserEventRequests(long userId, long eventId) {
         getUser(userId);
-        getEvent(eventId);
+        Event event = getEvent(eventId);
+        checkEventInitiator(userId, event);
         List<Request> requests = requestRepository.findAllByEventId(eventId);
-        log.info("Возвращен список событий: {}", requests);
+        log.info("Возвращен список запросов: {}", requests);
 
         return requests.stream().map(RequestMapper::toDto).collect(Collectors.toList());
     }
@@ -197,7 +197,7 @@ public class EventServiceImpl implements EventService {
         EventRequestStatusUpdateResult result = new EventRequestStatusUpdateResult();
         for (Request request : requests) {
             if (request.getStatus() != Status.PENDING) {
-                throw new IllegalArgumentException("Request must have status PENDING");
+                throw new IllegalOperationException("Request must have status PENDING");
             }
             if (updateRequest.getStatus() == Status.REJECTED) {
                 request.setStatus(Status.REJECTED);
@@ -208,8 +208,7 @@ public class EventServiceImpl implements EventService {
                     result.getConfirmedRequests().add(RequestMapper.toDto(request));
                     event.setConfirmedRequests(event.getConfirmedRequests() + 1);
                 } else {
-                    request.setStatus(Status.REJECTED);
-                    result.getRejectedRequests().add(RequestMapper.toDto(request));
+                    throw new IllegalOperationException("The participant limit has been reached");
                 }
             }
         }
@@ -231,11 +230,6 @@ public class EventServiceImpl implements EventService {
     private Category getCategory(long catId) {
         return categoryRepository.findById(catId)
                 .orElseThrow(() -> new NotFoundException("Category with id=" + catId + " was not found"));
-    }
-
-    private Request getRequest(long reqId) {
-        return requestRepository.findById(reqId)
-                .orElseThrow(() -> new NotFoundException("Request with id=" + reqId + " was not found"));
     }
 
     private void checkEventDate(String date) {
@@ -279,6 +273,7 @@ public class EventServiceImpl implements EventService {
                 if (rangeStart != null && rangeEnd != null) {
                     LocalDateTime start = LocalDateTime.parse(rangeStart, FORMATTER);
                     LocalDateTime end = LocalDateTime.parse(rangeEnd, FORMATTER);
+                    if (!start.isBefore(end)) throw new IllegalArgumentException("Start date must be before end date.");
                     predicates.add(builder.between(event.get("eventDate"), start, end));
                 } else if (rangeStart != null) {
                     LocalDateTime start = LocalDateTime.parse(rangeStart, FORMATTER);
@@ -320,6 +315,7 @@ public class EventServiceImpl implements EventService {
                 if (rangeStart != null && rangeEnd != null) {
                     LocalDateTime start = LocalDateTime.parse(rangeStart, FORMATTER);
                     LocalDateTime end = LocalDateTime.parse(rangeEnd, FORMATTER);
+                    if (!start.isBefore(end)) throw new IllegalArgumentException("Start date must be before end date.");
                     predicates.add(builder.between(event.get("eventDate"), start, end));
                 } else if (rangeStart != null) {
                     LocalDateTime start = LocalDateTime.parse(rangeStart, FORMATTER);
@@ -358,15 +354,18 @@ public class EventServiceImpl implements EventService {
             event.setAnnotation(annotation);
         }
         if (category != null) {
-            event.setCategory(categoryRepository.findById(category)
-                    .orElseThrow(() -> new NotFoundException("Category with id=" + category + " was not found")));
+            event.setCategory(getCategory(category));
         }
         if (description != null) {
             event.setDescription(description);
         }
         if (eventDate != null) {
             try {
-                event.setEventDate(LocalDateTime.parse(eventDate, FORMATTER));
+                LocalDateTime date = LocalDateTime.parse(eventDate, FORMATTER);
+                if (date.isBefore(LocalDateTime.now().plusHours(1))) {
+                    throw new IllegalArgumentException("The event date and time cannot be earlier than an hour from the current moment.");
+                }
+                event.setEventDate(date);
             } catch (DateTimeParseException ex) {
                 throw new IllegalArgumentException("Incorrect date format, please specify date in format yyyy-MM-dd HH:mm:ss");
             }
@@ -391,8 +390,18 @@ public class EventServiceImpl implements EventService {
             StateActionAdmin stateAction = ((UpdateEventAdminRequest) request).getStateAction();
             if (stateAction != null) {
                 if (stateAction == StateActionAdmin.PUBLISH_EVENT) {
+                    if (event.getState() != State.PENDING) {
+                        throw new IllegalOperationException(
+                                "Cannot publish the event because it's not in the right state: " + event.getState()
+                        );
+                    }
                     event.setState(State.PUBLISHED);
                 } else if (stateAction == StateActionAdmin.REJECT_EVENT) {
+                    if (event.getState() == State.PUBLISHED) {
+                        throw new IllegalOperationException(
+                                "Cannot reject the event because it's not in the right state: " + event.getState()
+                        );
+                    }
                     event.setState(State.CANCELED);
                 }
             }

@@ -63,7 +63,6 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = getCategory(catId);
         category.setName(categoryDto.getName());
         log.info("Обновлена категория: {}", category);
-        //TODO: проверить, корректно ли обновляется при дублировании названия
 
         return CategoryMapper.toDto(category);
     }

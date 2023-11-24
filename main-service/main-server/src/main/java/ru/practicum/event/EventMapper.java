@@ -57,11 +57,12 @@ public class EventMapper {
                 .eventDate(LocalDateTime.parse(newEventDto.getEventDate(), formatter))
                 .lat(newEventDto.getLocation().getLat())
                 .lon(newEventDto.getLocation().getLon())
-                .paid(newEventDto.getPaid())
-                .participantLimit(newEventDto.getParticipantLimit())
-                .requestModeration(newEventDto.getRequestModeration())
+                .paid(newEventDto.getPaid() != null && newEventDto.getPaid())
+                .participantLimit(newEventDto.getParticipantLimit() == null ? 0 : newEventDto.getParticipantLimit())
+                .requestModeration(newEventDto.getRequestModeration() == null || newEventDto.getRequestModeration())
                 .state(State.PENDING)
                 .title(newEventDto.getTitle())
+                .views(0L)
                 .build();
     }
 }

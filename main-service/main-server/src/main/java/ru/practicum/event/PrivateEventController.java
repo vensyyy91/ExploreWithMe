@@ -22,7 +22,7 @@ public class PrivateEventController {
     public List<EventShortDto> getUserEvents(@PathVariable long userId,
                                              @RequestParam(defaultValue = "0") int from,
                                              @RequestParam(defaultValue = "10") int size) {
-        log.info("Получен запрос GET /users/{}/events", userId);
+        log.info("Получен запрос GET /users/{}/events?from={}&size={}", userId, from, size);
         return eventService.getUserEvents(userId, from, size);
     }
 
@@ -30,7 +30,7 @@ public class PrivateEventController {
     @ResponseStatus(HttpStatus.CREATED)
     public EventFullDto addEvent(@PathVariable long userId,
                                  @RequestBody @Valid NewEventDto newEventDto) {
-        log.info("Получен запрос POST /users/{}/events", userId);
+        log.info("Получен запрос POST /users/{}/events\nТело запроса: {}", userId, newEventDto);
         return eventService.addNewEvent(userId, newEventDto);
     }
 
@@ -45,7 +45,7 @@ public class PrivateEventController {
     public EventFullDto updateUserEvent(@PathVariable long userId,
                                         @PathVariable long eventId,
                                         @RequestBody @Valid UpdateEventUserRequest updateRequest) {
-        log.info("Получен запрос PATCH /users/{}/events/{}", userId, eventId);
+        log.info("Получен запрос PATCH /users/{}/events/{}\nТело запроса: {}", userId, eventId, updateRequest);
         return eventService.updateUserEvent(userId, eventId, updateRequest);
     }
 
@@ -60,7 +60,7 @@ public class PrivateEventController {
     public EventRequestStatusUpdateResult updateUserEventRequestsStatus(@PathVariable long userId,
                                                                         @PathVariable long eventId,
                                                                         @RequestBody EventRequestStatusUpdateRequest request) {
-        log.info("Получен запрос PATCH /users/{}/events/{}/requests", userId, eventId);
+        log.info("Получен запрос PATCH /users/{}/events/{}/requests\nТело запроса: {}", userId, eventId, request);
         return eventService.updateUserEventRequestsStatus(userId, eventId, request);
     }
 }

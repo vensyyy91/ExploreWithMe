@@ -20,14 +20,14 @@ public class AdminUserController {
     public List<UserDto> getUsers(@RequestParam(required = false) Set<Long> ids,
                                   @RequestParam(defaultValue = "0") int from,
                                   @RequestParam(defaultValue = "10") int size) {
-        log.info("Получен запрос GET /admin/users");
+        log.info("Получен запрос GET /admin/users?from={}&size={}\nПараметры:\nids={}", from, size, ids);
         return userService.getUsers(ids, from, size);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UserDto addUser(@RequestBody @Valid NewUserRequest newUserRequest) {
-        log.info("Получен запрос POST /admin/users");
+        log.info("Получен запрос POST /admin/users\nТело запроса: {}", newUserRequest);
         return userService.addUser(newUserRequest);
     }
 
