@@ -39,6 +39,9 @@ public class StatsServiceImpl implements StatsService {
         try {
             LocalDateTime startTime = LocalDateTime.parse(URLDecoder.decode(start, StandardCharsets.UTF_8), FORMATTER);
             LocalDateTime endTime = LocalDateTime.parse(URLDecoder.decode(end, StandardCharsets.UTF_8), FORMATTER);
+            if (!startTime.isBefore(endTime)) {
+                throw new IllegalArgumentException("Start date must be before end date.");
+            }
             List<ViewStats> stats = unique
                     ? statsRepository.getStatsWithUnique(startTime, endTime)
                     : statsRepository.getStatsWithoutUnique(startTime, endTime);
@@ -51,7 +54,7 @@ public class StatsServiceImpl implements StatsService {
 
             return stats;
         } catch (DateTimeParseException ex) {
-            throw new IllegalArgumentException("Некорректный формат даты, укажите дату в формате yyyy-MM-dd HH:mm:ss");
+            throw new IllegalArgumentException("Incorrect date format, please specify date in format yyyy-MM-dd HH:mm:ss");
         }
     }
 }
