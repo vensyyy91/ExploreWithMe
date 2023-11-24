@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 @Slf4j
 public class ExceptionControllerHandler {
-    private final static DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @ExceptionHandler({MethodArgumentNotValidException.class,
             IllegalArgumentException.class,

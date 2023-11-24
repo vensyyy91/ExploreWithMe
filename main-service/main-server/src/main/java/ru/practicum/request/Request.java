@@ -11,8 +11,11 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "requests", uniqueConstraints = @UniqueConstraint(columnNames = {"event_id", "requester_id"}))
-@Getter @Setter @ToString
-@AllArgsConstructor @NoArgsConstructor
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class Request {
     @Id

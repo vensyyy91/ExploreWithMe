@@ -7,8 +7,11 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "categories")
-@Getter @Setter @ToString
-@AllArgsConstructor @NoArgsConstructor
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class Category {
     @Id

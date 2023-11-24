@@ -11,8 +11,11 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "events")
-@Getter @Setter @ToString
-@AllArgsConstructor @NoArgsConstructor
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class Event {
     @Id
