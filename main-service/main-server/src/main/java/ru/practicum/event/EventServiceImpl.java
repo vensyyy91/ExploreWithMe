@@ -143,12 +143,13 @@ public class EventServiceImpl implements EventService {
                 true
         ).getBody();
         if (stats != null) {
+            Map<Long, Long> views = stats.stream()
+                    .collect(Collectors.toMap(
+                            vs -> Long.parseLong(vs.getUri().replace("/events/", "")),
+                            ViewStats::getHits
+                    ));
             for (Event event : events) {
-                event.setViews(stats.stream()
-                        .filter(vs -> vs.getUri().equals("/events/" + event.getId()))
-                        .findFirst()
-                        .map(ViewStats::getHits)
-                        .orElse(0L));
+                event.setViews(views.getOrDefault(event.getId(), 0L));
             }
         }
         statsClient.addHit(EndpointHitDto.builder()
