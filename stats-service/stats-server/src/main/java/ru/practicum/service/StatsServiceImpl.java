@@ -39,7 +39,7 @@ public class StatsServiceImpl implements StatsService {
         try {
             LocalDateTime startTime = LocalDateTime.parse(URLDecoder.decode(start, StandardCharsets.UTF_8), FORMATTER);
             LocalDateTime endTime = LocalDateTime.parse(URLDecoder.decode(end, StandardCharsets.UTF_8), FORMATTER);
-            if (!startTime.isBefore(endTime)) {
+            if (startTime.isAfter(endTime)) {
                 throw new IllegalArgumentException("Start date must be before end date.");
             }
             List<ViewStats> stats = unique

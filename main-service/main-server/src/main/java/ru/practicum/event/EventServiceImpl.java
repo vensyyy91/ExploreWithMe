@@ -26,6 +26,7 @@ import ru.practicum.user.UserRepository;
 import javax.persistence.criteria.Predicate;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -39,6 +40,7 @@ public class EventServiceImpl implements EventService {
     private final UserRepository userRepository;
     private final RequestRepository requestRepository;
     private final StatsClient statsClient;
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     @Value("${application.name}")
     private String appName;
 
@@ -132,32 +134,24 @@ public class EventServiceImpl implements EventService {
                     .peek(event -> event.setConfirmedRequests(confirmedRequests.getOrDefault(event.getId(), 0L)))
                     .collect(Collectors.toList());
         }
-        Set<String> uris = new HashSet<>();
-        for (Event event : events) {
-            uris.add("/events/" + event.getId());
-        }
-        List<ViewStats> stats = statsClient.getStats(
-                "1970-01-01 00:00:00",
-                "2999-12-31 23:59:59",
-                uris,
-                true
-        ).getBody();
-        if (stats != null) {
-            Map<Long, Long> views = stats.stream()
-                    .collect(Collectors.toMap(
-                            vs -> Long.parseLong(vs.getUri().replace("/events/", "")),
-                            ViewStats::getHits
-                    ));
-            for (Event event : events) {
-                event.setViews(views.getOrDefault(event.getId(), 0L));
-            }
-        }
         statsClient.addHit(EndpointHitDto.builder()
                 .app(appName)
                 .uri(request.getRequestURI())
                 .ip(request.getRemoteAddr())
                 .timestamp(LocalDateTime.now())
                 .build());
+        Set<String> uris = new HashSet<>();
+        LocalDateTime earliestPublicationDate = LocalDateTime.now();
+        for (Event event : events) {
+            uris.add("/events/" + event.getId());
+            if (event.getPublishedOn().isBefore(earliestPublicationDate)) {
+                earliestPublicationDate = event.getPublishedOn();
+            }
+        }
+        Map<Long, Long> views = getViews(earliestPublicationDate, LocalDateTime.now(), uris);
+        for (Event event : events) {
+            event.setViews(views.getOrDefault(event.getId(), 0L));
+        }
         log.info("Возвращен список событий: {}", events);
 
         return events.stream().map(EventMapper::toFullDto).collect(Collectors.toList());
@@ -176,19 +170,8 @@ public class EventServiceImpl implements EventService {
                 .ip(request.getRemoteAddr())
                 .timestamp(LocalDateTime.now())
                 .build());
-        List<ViewStats> stats = statsClient.getStats(
-                "1970-01-01 00:00:00",
-                "2999-12-31 23:59:59",
-                Collections.singleton(uri),
-                true
-        ).getBody();
-        if (stats != null) {
-            event.setViews(stats.stream()
-                    .filter(vs -> vs.getUri().equals(uri))
-                    .findFirst()
-                    .map(ViewStats::getHits)
-                    .orElse(0L));
-        }
+        Map<Long, Long> views = getViews(event.getPublishedOn(), LocalDateTime.now(), Collections.singleton(uri));
+        event.setViews(views.getOrDefault(event.getId(), 0L));
         log.info("Возвращено событие: {}", event);
 
         return EventMapper.toFullDto(event);
@@ -400,6 +383,24 @@ public class EventServiceImpl implements EventService {
 
             return builder.and(predicates.toArray(new Predicate[0]));
         };
+    }
+
+    private Map<Long, Long> getViews(LocalDateTime start, LocalDateTime end, Set<String> uris) {
+        List<ViewStats> stats = statsClient.getStats(
+                start.format(FORMATTER),
+                end.format(FORMATTER),
+                uris,
+                true
+        ).getBody();
+        Map<Long, Long> views = new HashMap<>();
+        if (stats != null && !stats.isEmpty()) {
+            views = stats.stream()
+                    .collect(Collectors.toMap(
+                            vs -> Long.parseLong(vs.getUri().replace("/events/", "")),
+                            ViewStats::getHits
+                    ));
+        }
+        return views;
     }
 
     private <T extends UpdateEventRequest> void updateEvent(Event event, T request) {
