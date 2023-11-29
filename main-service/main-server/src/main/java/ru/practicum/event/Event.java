@@ -27,8 +27,8 @@ public class Event {
     @JoinColumn(name = "category_id", nullable = false)
     @ToString.Exclude
     private Category category;
-    @Column(name = "confirmed_requests")
-    private Integer confirmedRequests;
+    @Transient
+    private long confirmedRequests;
     @Column(name = "created_on", nullable = false)
     private LocalDateTime createdOn;
     @Column(nullable = false, length = 7000)
@@ -55,8 +55,8 @@ public class Event {
     private State state;
     @Column(nullable = false, length = 120)
     private String title;
-    @Column
-    private Long views;
+    @Transient
+    private long views;
 
     @Override
     public boolean equals(Object o) {

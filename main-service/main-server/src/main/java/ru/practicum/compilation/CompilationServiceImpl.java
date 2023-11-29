@@ -82,7 +82,7 @@ public class CompilationServiceImpl implements CompilationService {
         if (pinnedForUpdate != null) {
             compilation.setPinned(pinnedForUpdate);
         }
-        if (titleForUpdate != null) {
+        if (titleForUpdate != null && !titleForUpdate.isBlank()) {
             compilation.setTitle(titleForUpdate);
         }
         log.info("Обновлена подборка: {}", compilation);

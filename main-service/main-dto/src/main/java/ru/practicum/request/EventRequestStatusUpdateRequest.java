@@ -5,12 +5,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.practicum.enums.Status;
 
-import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class EventRequestStatusUpdateRequest {
-    private List<Long> requestIds;
+    private Set<Long> requestIds;
     private Status status;
 }

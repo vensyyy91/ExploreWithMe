@@ -15,7 +15,6 @@ import ru.practicum.user.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,7 +46,7 @@ public class RequestServiceImpl implements RequestService {
         if (event.getState() != State.PUBLISHED) {
             throw new IllegalOperationException("Event must be published to add a request.");
         }
-        if (event.getParticipantLimit() > 0 && Objects.equals(event.getConfirmedRequests(), event.getParticipantLimit())) {
+        if (event.getParticipantLimit() > 0 && event.getConfirmedRequests() == event.getParticipantLimit()) {
             throw new IllegalOperationException("The event has full participant limit.");
         }
         Request request = Request.builder()
@@ -82,8 +81,11 @@ public class RequestServiceImpl implements RequestService {
     }
 
     private Event getEvent(long eventId) {
-        return eventRepository.findById(eventId)
+        Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException("Event with id=" + eventId + " was not found"));
+        event.setConfirmedRequests(requestRepository.findEventConfirmedRequests(eventId));
+
+        return event;
     }
 
     private Request getRequest(long requestId) {

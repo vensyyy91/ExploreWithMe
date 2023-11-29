@@ -20,7 +20,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> getUsers(Set<Long> ids, int from, int size) {
-        List<User> users = ids != null
+        List<User> users = ids != null && !ids.isEmpty()
                 ? userRepository.findAllById(ids)
                 : userRepository.findAll(PageRequest.of(from / size, size)).getContent();
         log.info("Возвращен список объектов: {}", users);

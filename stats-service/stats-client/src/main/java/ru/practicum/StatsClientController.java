@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -21,13 +22,13 @@ public class StatsClientController {
 
     @PostMapping("/hit")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Object> hit(@RequestBody @Valid EndpointHitDto endpointHitDto) {
+    public ResponseEntity<EndpointHitDto> hit(@RequestBody @Valid EndpointHitDto endpointHitDto) {
         log.info("Получен запрос POST /hit");
         return statsClient.addHit(endpointHitDto);
     }
 
     @GetMapping("/stats")
-    public ResponseEntity<Object> getStats(@RequestParam @NotBlank String start,
+    public ResponseEntity<List<ViewStats>> getStats(@RequestParam @NotBlank String start,
                                            @RequestParam @NotBlank String end,
                                            @RequestParam(required = false) Set<String> uris,
                                            @RequestParam(required = false) boolean unique) {

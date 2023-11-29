@@ -65,6 +65,7 @@ CREATE TABLE IF NOT EXISTS compilations (
 CREATE TABLE IF NOT EXISTS compilation_event (
     comp_id BIGINT NOT NULL,
     event_id BIGINT NOT NULL,
+    CONSTRAINT pk_comp_event PRIMARY KEY (comp_id, event_id),
     CONSTRAINT fk_ce_comp FOREIGN KEY (comp_id) REFERENCES compilations,
     CONSTRAINT fk_ce_event FOREIGN KEY (event_id) REFERENCES events
 );

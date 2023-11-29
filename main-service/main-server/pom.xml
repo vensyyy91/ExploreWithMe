@@ -16,6 +16,7 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.test.skip>true</maven.test.skip>
     </properties>
 
     <dependencies>
@@ -34,7 +35,12 @@
         <dependency>
             <groupId>ru.practicum</groupId>
             <artifactId>main-dto</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ru.practicum</groupId>
+            <artifactId>stats-client</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

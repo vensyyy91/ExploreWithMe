@@ -1,14 +1,10 @@
 package ru.practicum;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.DefaultUriBuilderFactory;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -18,58 +14,52 @@ import java.util.Set;
 
 @Service
 public class StatsClient {
-    private final RestTemplate rest;
+    @Value("${stats-server.url}")
+    private String serverUrl;
+    private final RestTemplate rest = new RestTemplate();
 
-    public StatsClient(@Value("${stats-server.url}") String serverUrl, RestTemplateBuilder builder) {
-        this.rest = builder
-                .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl))
-                .requestFactory(HttpComponentsClientHttpRequestFactory::new)
-                .build();
+    public ResponseEntity<EndpointHitDto> addHit(EndpointHitDto endpointHitDto) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+        RequestEntity<EndpointHitDto> request = RequestEntity
+                .method(HttpMethod.POST, serverUrl + "/hit")
+                .headers(headers)
+                .body(endpointHitDto);
+        ResponseEntity<EndpointHitDto> response = rest.exchange(request, EndpointHitDto.class);
+
+        return prepareGatewayResponse(response);
     }
 
-    public ResponseEntity<Object> addHit(EndpointHitDto endpointHitDto) {
-        return makeAndSendRequest(HttpMethod.POST, "/hit", null, endpointHitDto);
-    }
-
-    public ResponseEntity<Object> getStats(String start, String end, Set<String> uris, boolean unique) {
+    public ResponseEntity<List<ViewStats>> getStats(String start, String end, Set<String> uris, boolean unique) {
         Map<String, Object> parameters = Map.of(
                 "start", URLEncoder.encode(start, StandardCharsets.UTF_8),
                 "end", URLEncoder.encode(end, StandardCharsets.UTF_8),
                 "unique", unique
         );
-        StringBuilder path = new StringBuilder("/stats?start={start}&end={end}&unique={unique}");
+        StringBuilder path = new StringBuilder(serverUrl + "/stats?start={start}&end={end}&unique={unique}");
         if (uris != null && !uris.isEmpty()) {
             for (String uri : uris) {
                 path.append("&uris=").append(uri);
             }
         }
-
-        return makeAndSendRequest(HttpMethod.GET, path.toString(), parameters, null);
-    }
-
-    private <T> ResponseEntity<Object> makeAndSendRequest(HttpMethod method,
-                                                          String path,
-                                                          @Nullable Map<String, Object> parameters,
-                                                          @Nullable T body) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(List.of(MediaType.APPLICATION_JSON));
-        HttpEntity<T> requestEntity = new HttpEntity<>(body, headers);
+        RequestEntity<Void> request = RequestEntity
+                .method(HttpMethod.GET, path.toString(), parameters)
+                .headers(headers)
+                .build();
+        ResponseEntity<List<ViewStats>> response = rest.exchange(
+                request,
+                new ParameterizedTypeReference<List<ViewStats>>() {
+                }
+        );
 
-        ResponseEntity<Object> serverResponse;
-        try {
-            if (parameters != null) {
-                serverResponse = rest.exchange(path, method, requestEntity, Object.class, parameters);
-            } else {
-                serverResponse = rest.exchange(path, method, requestEntity, Object.class);
-            }
-        } catch (HttpStatusCodeException e) {
-            return ResponseEntity.status(e.getStatusCode()).body(e.getResponseBodyAsByteArray());
-        }
-        return prepareGatewayResponse(serverResponse);
+        return prepareGatewayResponse(response);
     }
 
-    private static ResponseEntity<Object> prepareGatewayResponse(ResponseEntity<Object> response) {
+    private static <T> ResponseEntity<T> prepareGatewayResponse(ResponseEntity<T> response) {
         if (response.getStatusCode().is2xxSuccessful()) {
             return response;
         }

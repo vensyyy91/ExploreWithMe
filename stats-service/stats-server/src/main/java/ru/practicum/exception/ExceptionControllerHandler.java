@@ -13,7 +13,7 @@ public class ExceptionControllerHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Response handleIllegalArgumentException(IllegalArgumentException ex) {
         String message = ex.getMessage();
-        log.info(message);
+        log.error("Статус 400 BAD REQUEST: {}", message, ex);
 
         return new Response(message);
     }

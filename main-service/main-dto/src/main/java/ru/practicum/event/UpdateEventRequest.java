@@ -1,11 +1,16 @@
 package ru.practicum.event;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.validator.constraints.Length;
+import ru.practicum.validation.ValidEventDate;
+
+import javax.validation.constraints.PositiveOrZero;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -18,9 +23,12 @@ public abstract class UpdateEventRequest {
     private Long category;
     @Length(min = 20, max = 7000, message = "Event description length must be between 20 and 7000 characters")
     private String description;
-    private String eventDate;
+    @ValidEventDate
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime eventDate;
     private Location location;
     private Boolean paid;
+    @PositiveOrZero
     private Integer participantLimit;
     private Boolean requestModeration;
     @Length(min = 3, max = 120, message = "Event title length must be between 3 and 120 characters")

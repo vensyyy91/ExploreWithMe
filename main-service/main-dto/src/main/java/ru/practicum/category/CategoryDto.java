@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
 @Data
 @AllArgsConstructor
@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CategoryDto {
     private Long id;
-    @NotNull
+    @NotBlank
     @Length(min = 1, max = 50, message = "Category name length must be between 1 and 50 characters")
     private String name;
 }

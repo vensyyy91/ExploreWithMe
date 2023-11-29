@@ -2,9 +2,11 @@ package ru.practicum.event;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -19,12 +21,16 @@ public class AdminEventController {
     public List<EventFullDto> getEvents(@RequestParam(required = false) Set<Long> users,
                                         @RequestParam(required = false) Set<String> states,
                                         @RequestParam(required = false) Set<Long> categories,
-                                        @RequestParam(required = false) String rangeStart,
-                                        @RequestParam(required = false) String rangeEnd,
+                                        @RequestParam(required = false)
+                                        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+                                        LocalDateTime rangeStart,
+                                        @RequestParam(required = false)
+                                        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+                                        LocalDateTime rangeEnd,
                                         @RequestParam(defaultValue = "0") int from,
                                         @RequestParam(defaultValue = "10") int size) {
         log.info("Получен запрос GET /admin/events?from={}&size={}\n" +
-                "Параметры:\nusers={}\nstates={}\ncategories={}\nrangeStart={}\nrangeEnd={}",
+                        "Параметры:\nusers={}\nstates={}\ncategories={}\nrangeStart={}\nrangeEnd={}",
                 from, size, users, states, categories, rangeStart, rangeEnd);
         return eventService.getAllEvents(users, states, categories, rangeStart, rangeEnd, from, size);
     }

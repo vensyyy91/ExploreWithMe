@@ -10,7 +10,7 @@ import java.util.Set;
 @Builder
 public class CompilationDto {
     private Long id;
-    Set<EventShortDto> events;
+    private Set<EventShortDto> events;
     private Boolean pinned;
     private String title;
 }
