@@ -14,9 +14,9 @@
     <packaging>pom</packaging>
     <name>EWM Stats Service</name>
     <modules>
-        <module>service</module>
-        <module>client</module>
-        <module>dto</module>
+        <module>stats-server</module>
+        <module>stats-client</module>
+        <module>stats-dto</module>
     </modules>
 
     <properties>
@@ -47,6 +47,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
         </dependency>
     </dependencies>
 

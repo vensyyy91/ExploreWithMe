@@ -1,7 +1,7 @@
 version: '3.1'
 services:
   stats-server:
-    build: stats-service/service
+    build: stats-service/stats-server
     ports:
       - "9091:9091"
     depends_on:
@@ -12,7 +12,7 @@ services:
       - POSTGRES_PASSWORD=postgres
 
   stats-client:
-    build: stats-service/client
+    build: stats-service/stats-client
     ports:
       - "9090:9090"
     depends_on:
@@ -31,7 +31,7 @@ services:
       - POSTGRES_HOST_AUTH_METHOD=md5
 
   ewm-service:
-    build: main-service
+    build: main-service/main-server
     ports:
       - "8080:8080"
     depends_on:
@@ -40,6 +40,7 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:6543/ewmmaindb
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+      - STATS_SERVER_URL=http://stats-server:9091
 
   ewm-db:
     image: postgres:14-alpine
@@ -50,3 +51,4 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_HOST_AUTH_METHOD=md5
+    command: -p 6543
