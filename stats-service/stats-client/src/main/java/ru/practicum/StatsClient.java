@@ -6,8 +6,8 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -16,6 +16,7 @@ import java.util.Set;
 public class StatsClient {
     @Value("${stats-server.url}")
     private String serverUrl;
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private final RestTemplate rest = new RestTemplate();
 
     public ResponseEntity<EndpointHitDto> addHit(EndpointHitDto endpointHitDto) {
@@ -31,10 +32,10 @@ public class StatsClient {
         return prepareGatewayResponse(response);
     }
 
-    public ResponseEntity<List<ViewStats>> getStats(String start, String end, Set<String> uris, boolean unique) {
+    public ResponseEntity<List<ViewStats>> getStats(LocalDateTime start, LocalDateTime end, Set<String> uris, boolean unique) {
         Map<String, Object> parameters = Map.of(
-                "start", URLEncoder.encode(start, StandardCharsets.UTF_8),
-                "end", URLEncoder.encode(end, StandardCharsets.UTF_8),
+                "start", start.format(FORMATTER),
+                "end", end.format(FORMATTER),
                 "unique", unique
         );
         StringBuilder path = new StringBuilder(serverUrl + "/stats?start={start}&end={end}&unique={unique}");

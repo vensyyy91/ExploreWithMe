@@ -26,7 +26,6 @@ import ru.practicum.user.UserRepository;
 import javax.persistence.criteria.Predicate;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -40,7 +39,6 @@ public class EventServiceImpl implements EventService {
     private final UserRepository userRepository;
     private final RequestRepository requestRepository;
     private final StatsClient statsClient;
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     @Value("${application.name}")
     private String appName;
 
@@ -386,12 +384,7 @@ public class EventServiceImpl implements EventService {
     }
 
     private Map<Long, Long> getViews(LocalDateTime start, LocalDateTime end, Set<String> uris) {
-        List<ViewStats> stats = statsClient.getStats(
-                start.format(FORMATTER),
-                end.format(FORMATTER),
-                uris,
-                true
-        ).getBody();
+        List<ViewStats> stats = statsClient.getStats(start, end, uris, true).getBody();
         Map<Long, Long> views = new HashMap<>();
         if (stats != null && !stats.isEmpty()) {
             views = stats.stream()

@@ -4,15 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.EndpointHitDto;
-import ru.practicum.repository.StatsRepository;
 import ru.practicum.ViewStats;
 import ru.practicum.model.EndpointHit;
 import ru.practicum.model.EndpointHitMapper;
+import ru.practicum.repository.StatsRepository;
 
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Set;
@@ -23,7 +20,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class StatsServiceImpl implements StatsService {
     private final StatsRepository statsRepository;
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Override
     public EndpointHitDto addHit(EndpointHitDto endpointHitDto) {
@@ -35,16 +31,14 @@ public class StatsServiceImpl implements StatsService {
     }
 
     @Override
-    public List<ViewStats> getStats(String start, String end, Set<String> uris, boolean unique) {
+    public List<ViewStats> getStats(LocalDateTime start, LocalDateTime end, Set<String> uris, boolean unique) {
         try {
-            LocalDateTime startTime = LocalDateTime.parse(URLDecoder.decode(start, StandardCharsets.UTF_8), FORMATTER);
-            LocalDateTime endTime = LocalDateTime.parse(URLDecoder.decode(end, StandardCharsets.UTF_8), FORMATTER);
-            if (startTime.isAfter(endTime)) {
+            if (start.isAfter(end)) {
                 throw new IllegalArgumentException("Start date must be before end date.");
             }
             List<ViewStats> stats = unique
-                    ? statsRepository.getStatsWithUnique(startTime, endTime)
-                    : statsRepository.getStatsWithoutUnique(startTime, endTime);
+                    ? statsRepository.getStatsWithUnique(start, end)
+                    : statsRepository.getStatsWithoutUnique(start, end);
             if (uris != null && !uris.isEmpty()) {
                 stats = stats.stream()
                         .filter(stat -> uris.contains(stat.getUri()))
