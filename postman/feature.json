@@ -28,7 +28,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"email\": \"user134@yandex.ru\",\r\n    \"name\": \"user134\"\r\n}",
+					"raw": "{\r\n    \"email\": \"user136@yandex.ru\",\r\n    \"name\": \"user136\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -70,7 +70,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"email\": \"user135@yandex.ru\",\r\n    \"name\": \"user135\"\r\n}",
+					"raw": "{\r\n    \"email\": \"user137@yandex.ru\",\r\n    \"name\": \"user137\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -112,7 +112,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"email\": \"user136@yandex.ru\",\r\n    \"name\": \"user136\"\r\n}",
+					"raw": "{\r\n    \"email\": \"user138@yandex.ru\",\r\n    \"name\": \"user138\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -154,7 +154,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"category119\"\r\n}",
+					"raw": "{\r\n    \"name\": \"category121\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -211,7 +211,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"annotation\": \"103 event is best event ever\",\r\n    \"category\": 119,\r\n    \"description\": \"best event ever made for tests in postman\",\r\n    \"eventDate\": \"{{nowPlusTwo}}\",\r\n    \"location\": {\r\n        \"lat\": 80,\r\n        \"lon\": 50\r\n    },\r\n    \"paid\": true,\r\n    \"participantLimit\": 0,\r\n    \"requestModeration\": false,\r\n    \"title\": \"event 103\"\r\n}",
+					"raw": "{\r\n    \"annotation\": \"106 event is best event ever\",\r\n    \"category\": 121,\r\n    \"description\": \"best event ever made for tests in postman\",\r\n    \"eventDate\": \"{{nowPlusTwo}}\",\r\n    \"location\": {\r\n        \"lat\": 80,\r\n        \"lon\": 50\r\n    },\r\n    \"paid\": true,\r\n    \"participantLimit\": 0,\r\n    \"requestModeration\": false,\r\n    \"title\": \"event 106\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -231,7 +231,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "134",
+							"value": "136",
 							"description": "Идентификатор пользователя"
 						}
 					]
@@ -281,7 +281,7 @@
 					"variable": [
 						{
 							"key": "eventId",
-							"value": "103",
+							"value": "106",
 							"description": "Идентификатор события"
 						}
 					]
@@ -310,7 +310,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "{{baseUrl}}/users/:userId/requests?eventId=103",
+					"raw": "{{baseUrl}}/users/:userId/requests?eventId=106",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -322,14 +322,14 @@
 					"query": [
 						{
 							"key": "eventId",
-							"value": "103",
+							"value": "106",
 							"description": "Идентификатор события"
 						}
 					],
 					"variable": [
 						{
 							"key": "userId",
-							"value": "135",
+							"value": "137",
 							"description": "Идентификатор пользователя"
 						}
 					]
@@ -358,7 +358,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "{{baseUrl}}/users/:userId/requests?eventId=103",
+					"raw": "{{baseUrl}}/users/:userId/requests?eventId=106",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -370,14 +370,14 @@
 					"query": [
 						{
 							"key": "eventId",
-							"value": "103",
+							"value": "106",
 							"description": "Идентификатор события"
 						}
 					],
 					"variable": [
 						{
 							"key": "userId",
-							"value": "136",
+							"value": "138",
 							"description": "Идентификатор пользователя"
 						}
 					]
@@ -443,7 +443,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "135",
+							"value": "137",
 							"description": "Идентификатор пользователя"
 						}
 					]
@@ -490,7 +490,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/users/:userId/marks?eventId=103",
+					"raw": "{{baseUrl}}/users/:userId/marks?eventId=106",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -502,14 +502,14 @@
 					"query": [
 						{
 							"key": "eventId",
-							"value": "103",
+							"value": "106",
 							"description": "Идентификатор события"
 						}
 					],
 					"variable": [
 						{
 							"key": "userId",
-							"value": "134",
+							"value": "136",
 							"description": "Идентификатор пользователя"
 						}
 					]
@@ -556,7 +556,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/users/:userId/marks?eventId=103",
+					"raw": "{{baseUrl}}/users/:userId/marks?eventId=106",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -568,14 +568,14 @@
 					"query": [
 						{
 							"key": "eventId",
-							"value": "103",
+							"value": "106",
 							"description": "Идентификатор события"
 						}
 					],
 					"variable": [
 						{
 							"key": "userId",
-							"value": "133",
+							"value": "134",
 							"description": "Идентификатор пользователя"
 						}
 					]
@@ -622,7 +622,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/users/:userId/marks?eventId=103",
+					"raw": "{{baseUrl}}/users/:userId/marks?eventId=106",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -634,14 +634,14 @@
 					"query": [
 						{
 							"key": "eventId",
-							"value": "103",
+							"value": "106",
 							"description": "Идентификатор события"
 						}
 					],
 					"variable": [
 						{
 							"key": "userId",
-							"value": "135",
+							"value": "137",
 							"description": "Идентификатор пользователя"
 						}
 					]
@@ -688,7 +688,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/users/:userId/marks?eventId=103",
+					"raw": "{{baseUrl}}/users/:userId/marks?eventId=106",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -700,14 +700,14 @@
 					"query": [
 						{
 							"key": "eventId",
-							"value": "103",
+							"value": "106",
 							"description": "Идентификатор события"
 						}
 					],
 					"variable": [
 						{
 							"key": "userId",
-							"value": "135",
+							"value": "137",
 							"description": "Идентификатор пользователя"
 						}
 					]
@@ -754,7 +754,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/users/:userId/marks?eventId=103",
+					"raw": "{{baseUrl}}/users/:userId/marks?eventId=106",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -766,14 +766,14 @@
 					"query": [
 						{
 							"key": "eventId",
-							"value": "103",
+							"value": "106",
 							"description": "Идентификатор события"
 						}
 					],
 					"variable": [
 						{
 							"key": "userId",
-							"value": "135",
+							"value": "137",
 							"description": "Идентификатор пользователя"
 						}
 					]
@@ -820,7 +820,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/users/:userId/marks?eventId=103",
+					"raw": "{{baseUrl}}/users/:userId/marks?eventId=106",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -832,14 +832,14 @@
 					"query": [
 						{
 							"key": "eventId",
-							"value": "103",
+							"value": "106",
 							"description": "Идентификатор события"
 						}
 					],
 					"variable": [
 						{
 							"key": "userId",
-							"value": "135",
+							"value": "137",
 							"description": "Идентификатор пользователя"
 						}
 					]
@@ -899,7 +899,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "135",
+							"value": "137",
 							"description": "Идентификатор пользователя"
 						},
 						{
@@ -964,7 +964,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "134",
+							"value": "136",
 							"description": "Идентификатор пользователя"
 						},
 						{
@@ -1029,7 +1029,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "135",
+							"value": "137",
 							"description": "Идентификатор пользователя"
 						},
 						{
@@ -1094,7 +1094,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "135",
+							"value": "137",
 							"description": "Идентификатор пользователя"
 						},
 						{
@@ -1159,7 +1159,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "135",
+							"value": "137",
 							"description": "Идентификатор пользователя"
 						},
 						{
@@ -1224,7 +1224,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "135",
+							"value": "137",
 							"description": "Идентификатор пользователя"
 						},
 						{
@@ -1276,7 +1276,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/users/:userId/marks?eventId=103",
+					"raw": "{{baseUrl}}/users/:userId/marks?eventId=106",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -1288,14 +1288,14 @@
 					"query": [
 						{
 							"key": "eventId",
-							"value": "103",
+							"value": "106",
 							"description": "Идентификатор события"
 						}
 					],
 					"variable": [
 						{
 							"key": "userId",
-							"value": "136",
+							"value": "138",
 							"description": "Идентификатор пользователя"
 						}
 					]
@@ -1348,7 +1348,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "135",
+							"value": "137",
 							"description": "Идентификатор пользователя"
 						}
 					]
@@ -1401,7 +1401,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "135",
+							"value": "137",
 							"description": "Идентификатор пользователя"
 						}
 					]
@@ -1442,7 +1442,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "135",
+							"value": "137",
 							"description": "Идентификатор пользователя"
 						}
 					]
@@ -1534,7 +1534,7 @@
 					"variable": [
 						{
 							"key": "eventId",
-							"value": "103",
+							"value": "106",
 							"description": "Идентификатор события"
 						}
 					]
@@ -1586,7 +1586,7 @@
 					"variable": [
 						{
 							"key": "eventId",
-							"value": "103",
+							"value": "106",
 							"description": "Идентификатор события"
 						}
 					]
@@ -1626,7 +1626,7 @@
 					"variable": [
 						{
 							"key": "eventId",
-							"value": "103",
+							"value": "106",
 							"description": "Идентификатор события"
 						}
 					]
