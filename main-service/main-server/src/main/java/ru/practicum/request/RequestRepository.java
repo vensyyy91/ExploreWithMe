@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import ru.practicum.event.EventConfirmedRequests;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface RequestRepository extends JpaRepository<Request, Long> {
     List<Request> findAllByRequesterId(Long requesterId);
@@ -21,4 +22,6 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
             "where r.status = 'CONFIRMED' " +
             "group by r.event.id")
     List<EventConfirmedRequests> findAllEventConfirmedRequests();
+
+    Optional<Request> findByRequesterIdAndEventId(Long userId, Long eventId);
 }

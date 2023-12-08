@@ -27,6 +27,7 @@ public class EventFullDto {
     private Integer participantLimit;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime publishedOn;
+    private Double rating;
     private Boolean requestModeration;
     private State state;
     private String title;

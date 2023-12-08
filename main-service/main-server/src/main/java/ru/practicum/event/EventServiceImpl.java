@@ -93,7 +93,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<EventFullDto> getPublishedEvents(String text,
+    public List<EventShortDto> getPublishedEvents(String text,
                                                  Set<Long> categories,
                                                  Boolean paid,
                                                  LocalDateTime rangeStart,
@@ -118,6 +118,9 @@ public class EventServiceImpl implements EventService {
                     break;
                 case "VIEWS":
                     eventSort = Sort.by(Sort.Direction.DESC, "views");
+                    break;
+                case "RATING":
+                    eventSort = Sort.by(Sort.Direction.DESC, "rating");
                     break;
                 default:
                     throw new IllegalArgumentException("Sort must be EVENT_DATE or VIEWS");
@@ -152,7 +155,7 @@ public class EventServiceImpl implements EventService {
         }
         log.info("Возвращен список событий: {}", events);
 
-        return events.stream().map(EventMapper::toFullDto).collect(Collectors.toList());
+        return events.stream().map(EventMapper::toShortDto).collect(Collectors.toList());
     }
 
     @Override
@@ -207,10 +210,8 @@ public class EventServiceImpl implements EventService {
         Event event = getEvent(eventId);
         checkEventInitiator(userId, event);
         log.info("Возвращено событие: {}", event);
-        EventFullDto eventDto = EventMapper.toFullDto(event);
-        eventDto.setConfirmedRequests(requestRepository.findEventConfirmedRequests(eventId));
 
-        return eventDto;
+        return EventMapper.toFullDto(event);
     }
 
     @Override

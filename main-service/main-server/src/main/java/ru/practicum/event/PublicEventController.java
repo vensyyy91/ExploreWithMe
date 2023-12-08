@@ -8,6 +8,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -21,7 +23,7 @@ public class PublicEventController {
     private final EventService eventService;
 
     @GetMapping
-    public List<EventFullDto> getEvents(@RequestParam(required = false) @Length(min = 1, max = 7000) String text,
+    public List<EventShortDto> getEvents(@RequestParam(required = false) @Length(min = 1, max = 7000) String text,
                                         @RequestParam(required = false) Set<Long> categories,
                                         @RequestParam(required = false) Boolean paid,
                                         @RequestParam(required = false)
@@ -32,8 +34,8 @@ public class PublicEventController {
                                         LocalDateTime rangeEnd,
                                         @RequestParam(defaultValue = "false") boolean onlyAvailable,
                                         @RequestParam(required = false) String sort,
-                                        @RequestParam(defaultValue = "0") int from,
-                                        @RequestParam(defaultValue = "10") int size,
+                                        @RequestParam(defaultValue = "0") @PositiveOrZero int from,
+                                        @RequestParam(defaultValue = "10") @Positive int size,
                                         HttpServletRequest request) {
         log.info("Получен запрос GET /events?from={}&size={}\n" +
                         "Параметры:\ntext={}\ncategories={}\npaid={}\nrangeStart={}\nrangeEnd={}\nonlyAvailable={}\nsort={}",

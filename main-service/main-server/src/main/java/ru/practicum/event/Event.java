@@ -1,6 +1,7 @@
 package ru.practicum.event;
 
 import lombok.*;
+import org.hibernate.annotations.Formula;
 import ru.practicum.category.Category;
 import ru.practicum.enums.State;
 import ru.practicum.user.User;
@@ -49,6 +50,9 @@ public class Event {
     private Integer participantLimit;
     @Column(name = "published_on")
     private LocalDateTime publishedOn;
+    @Formula(value = "(SELECT CASE WHEN AVG(m.mark) IS NULL THEN 0.0 ELSE AVG(m.mark) END " +
+            "FROM marks AS m WHERE m.event_id = id)")
+    private double rating;
     @Column(name = "request_moderation", nullable = false)
     private Boolean requestModeration;
     @Enumerated(EnumType.STRING)

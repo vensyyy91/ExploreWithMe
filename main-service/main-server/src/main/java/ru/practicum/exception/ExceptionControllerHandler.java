@@ -34,13 +34,13 @@ public class ExceptionControllerHandler {
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ApiError handlePSQLException(PSQLException ex) {
-        log.error("Статус 409 CONFLICT: {}", ex.getMessage(), ex);
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiError handleConstraintViolationException(ConstraintViolationException ex) {
+        log.error("Статус 400 BAD REQUEST: {}", ex.getMessage(), ex);
         return ApiError.builder()
                 .errors(Arrays.stream(ex.getStackTrace()).map(StackTraceElement::toString).collect(Collectors.toList()))
-                .status("CONFLICT")
-                .reason("Integrity constraint has been violated.")
+                .status("BAD REQUEST")
+                .reason("Incorrectly made request.")
                 .message(ex.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build();
@@ -48,7 +48,7 @@ public class ExceptionControllerHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ApiError handleConstraintViolationException(ConstraintViolationException ex) {
+    public ApiError handlePSQLException(PSQLException ex) {
         log.error("Статус 409 CONFLICT: {}", ex.getMessage(), ex);
         return ApiError.builder()
                 .errors(Arrays.stream(ex.getStackTrace()).map(StackTraceElement::toString).collect(Collectors.toList()))

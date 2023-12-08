@@ -9,11 +9,16 @@ public class UserMapper {
                 .id(user.getId())
                 .email(user.getEmail())
                 .name(user.getName())
+                .rating(user.getRating())
                 .build();
     }
 
     public UserShortDto toShortDto(User user) {
-        return new UserShortDto(user.getId(), user.getName());
+        return UserShortDto.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .rating(user.getRating())
+                .build();
     }
 
     public User fromDto(NewUserRequest userDto) {

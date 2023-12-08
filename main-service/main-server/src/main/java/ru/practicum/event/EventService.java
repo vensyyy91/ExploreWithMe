@@ -20,7 +20,7 @@ public interface EventService {
 
     EventFullDto updateEventByAdmin(long eventId, UpdateEventAdminRequest updateEventAdminRequest);
 
-    List<EventFullDto> getPublishedEvents(String text,
+    List<EventShortDto> getPublishedEvents(String text,
                                           Set<Long> categories,
                                           Boolean paid,
                                           LocalDateTime rangeStart,

@@ -9,6 +9,8 @@ import ru.practicum.request.EventRequestStatusUpdateResult;
 import ru.practicum.request.ParticipationRequestDto;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @RestController
@@ -20,8 +22,8 @@ public class PrivateEventController {
 
     @GetMapping
     public List<EventShortDto> getUserEvents(@PathVariable long userId,
-                                             @RequestParam(defaultValue = "0") int from,
-                                             @RequestParam(defaultValue = "10") int size) {
+                                             @RequestParam(defaultValue = "0") @PositiveOrZero int from,
+                                             @RequestParam(defaultValue = "10") @Positive int size) {
         log.info("Получен запрос GET /users/{}/events?from={}&size={}", userId, from, size);
         return eventService.getUserEvents(userId, from, size);
     }
