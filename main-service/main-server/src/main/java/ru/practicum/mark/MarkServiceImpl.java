@@ -19,6 +19,7 @@ import ru.practicum.user.UserRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,12 +44,14 @@ public class MarkServiceImpl implements MarkService {
     @Override
     @Transactional
     public MarkDto addMark(long userId, long eventId, NewMarkDto newMarkDto) {
+        Optional<Mark> oldMark = markRepository.findByUserIdAndEventId(userId, eventId);
+        if (oldMark.isPresent()) {
+            throw new IllegalOperationException("User with id=" + userId + " already rated the event with id=" + eventId);
+        }
         User user = getUser(userId);
         Event event = getEvent(eventId);
         checkUserAndEvent(user, event);
-        Mark mark = MarkMapper.fromDto(newMarkDto);
-        mark.setUser(user);
-        mark.setEvent(event);
+        Mark mark = MarkMapper.fromDto(newMarkDto, user, event);
         Mark savedMark = markRepository.save(mark);
         log.info("Добавлена оценка: {}", savedMark);
 

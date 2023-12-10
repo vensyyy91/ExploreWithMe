@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.user.Initiator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Positive;
@@ -49,5 +50,12 @@ public class PublicEventController {
     public EventFullDto getEventById(@PathVariable long id, HttpServletRequest request) {
         log.info("Получен запрос GET /events/{}", id);
         return eventService.getPublishedEventById(id, request);
+    }
+
+    @GetMapping("/initiators")
+    public List<Initiator> getTopEventInitiators(@RequestParam(defaultValue = "0") @PositiveOrZero int from,
+                                                 @RequestParam(defaultValue = "10") @Positive int size) {
+        log.info("Получен запрос GET /events/initiators?from={}&size={}", from, size);
+        return eventService.getTopEventInitiators(from, size);
     }
 }

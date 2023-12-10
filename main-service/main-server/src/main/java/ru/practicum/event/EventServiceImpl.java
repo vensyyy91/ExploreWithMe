@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +18,9 @@ import ru.practicum.enums.StateActionUser;
 import ru.practicum.enums.Status;
 import ru.practicum.exception.IllegalOperationException;
 import ru.practicum.exception.NotFoundException;
+import ru.practicum.mark.MarkRepository;
 import ru.practicum.request.*;
+import ru.practicum.user.Initiator;
 import ru.practicum.user.User;
 import ru.practicum.user.UserRepository;
 
@@ -38,6 +39,7 @@ public class EventServiceImpl implements EventService {
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
     private final RequestRepository requestRepository;
+    private final MarkRepository markRepository;
     private final StatsClient statsClient;
     @Value("${application.name}")
     private String appName;
@@ -109,53 +111,52 @@ public class EventServiceImpl implements EventService {
         );
         Map<Long, Long> confirmedRequests = requestRepository.findAllEventConfirmedRequests().stream()
                 .collect(Collectors.toMap(EventConfirmedRequests::getEventId, EventConfirmedRequests::getCount));
-        List<Event> events;
-        if (sort != null) {
-            Sort eventSort;
-            switch (sort) {
-                case "EVENT_DATE":
-                    eventSort = Sort.by(Sort.Direction.ASC, "eventDate");
-                    break;
-                case "VIEWS":
-                    eventSort = Sort.by(Sort.Direction.DESC, "views");
-                    break;
-                case "RATING":
-                    eventSort = Sort.by(Sort.Direction.DESC, "rating");
-                    break;
-                default:
-                    throw new IllegalArgumentException("Sort must be EVENT_DATE or VIEWS");
-            }
-            events = eventRepository.findAll(specification, PageRequest.of(from / size, size, eventSort))
-                    .getContent().stream()
-                    .peek(event -> event.setConfirmedRequests(confirmedRequests.getOrDefault(event.getId(), 0L)))
-                    .collect(Collectors.toList());
-        } else {
-            events = eventRepository.findAll(specification, PageRequest.of(from / size, size))
-                    .getContent().stream()
-                    .peek(event -> event.setConfirmedRequests(confirmedRequests.getOrDefault(event.getId(), 0L)))
-                    .collect(Collectors.toList());
-        }
+        List<Event> events = eventRepository.findAll(specification).stream()
+                .peek(event -> event.setConfirmedRequests(confirmedRequests.getOrDefault(event.getId(), 0L)))
+                .collect(Collectors.toList());
         statsClient.addHit(EndpointHitDto.builder()
                 .app(appName)
                 .uri(request.getRequestURI())
                 .ip(request.getRemoteAddr())
                 .timestamp(LocalDateTime.now())
                 .build());
+        Set<Long> ids = new HashSet<>();
         Set<String> uris = new HashSet<>();
         LocalDateTime earliestPublicationDate = LocalDateTime.now();
         for (Event event : events) {
+            ids.add(event.getId());
             uris.add("/events/" + event.getId());
             if (event.getPublishedOn().isBefore(earliestPublicationDate)) {
                 earliestPublicationDate = event.getPublishedOn();
             }
         }
+        Map<Long, Double> ratings = markRepository.getAllEventsRating(ids).stream()
+                .collect(Collectors.toMap(EventRating::getEventId, EventRating::getRating));
         Map<Long, Long> views = getViews(earliestPublicationDate, LocalDateTime.now(), uris);
         for (Event event : events) {
+            event.setRating(ratings.getOrDefault(event.getId(), 0.0));
             event.setViews(views.getOrDefault(event.getId(), 0L));
         }
-        log.info("Возвращен список событий: {}", events);
+        if (sort != null) {
+            switch (sort) {
+                case "EVENT_DATE":
+                    events.sort(Comparator.comparing(Event::getEventDate));
+                    break;
+                case "VIEWS":
+                    events.sort(Comparator.comparing(Event::getViews).reversed());
+                    break;
+                case "RATING":
+                    events.sort(Comparator.comparing(Event::getRating).reversed());
+                    break;
+                default:
+                    throw new IllegalArgumentException("Sort must be EVENT_DATE, VIEWS or RATING");
+            }
+        }
+        int to = Math.min(from + size, events.size());
+        List<Event> eventsPage = events.subList(from, to);
+        log.info("Возвращен список событий: {}", eventsPage);
 
-        return events.stream().map(EventMapper::toShortDto).collect(Collectors.toList());
+        return eventsPage.stream().map(EventMapper::toShortDto).collect(Collectors.toList());
     }
 
     @Override
@@ -171,6 +172,7 @@ public class EventServiceImpl implements EventService {
                 .ip(request.getRemoteAddr())
                 .timestamp(LocalDateTime.now())
                 .build());
+        event.setRating(markRepository.getEventRating(id).orElse(0.0));
         Map<Long, Long> views = getViews(event.getPublishedOn(), LocalDateTime.now(), Collections.singleton(uri));
         event.setViews(views.getOrDefault(event.getId(), 0L));
         log.info("Возвращено событие: {}", event);
@@ -275,6 +277,13 @@ public class EventServiceImpl implements EventService {
         log.info("Возвращен результат обновления статусов запросов: {}", result);
 
         return result;
+    }
+
+    @Override
+    public List<Initiator> getTopEventInitiators(int from, int size) {
+        List<Initiator> initiators = userRepository.findTopInitiators(PageRequest.of(from / size, size)).getContent();
+        log.info("Возвращен список инициаторов событий: {}", initiators);
+        return initiators;
     }
 
     private Event getEvent(long eventId) {

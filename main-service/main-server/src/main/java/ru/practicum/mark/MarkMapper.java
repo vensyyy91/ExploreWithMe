@@ -1,6 +1,8 @@
 package ru.practicum.mark;
 
 import lombok.experimental.UtilityClass;
+import ru.practicum.event.Event;
+import ru.practicum.user.User;
 
 import java.time.LocalDateTime;
 
@@ -17,8 +19,10 @@ public class MarkMapper {
                 .build();
     }
 
-    public Mark fromDto(NewMarkDto newMarkDto) {
+    public Mark fromDto(NewMarkDto newMarkDto, User user, Event event) {
         return Mark.builder()
+                .user(user)
+                .event(event)
                 .mark(newMarkDto.getMark())
                 .markedOn(LocalDateTime.now())
                 .message(newMarkDto.getMessage())

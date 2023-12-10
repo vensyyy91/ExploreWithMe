@@ -1,7 +1,6 @@
 package ru.practicum.user;
 
 import lombok.*;
-import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -22,10 +21,6 @@ public class User {
     private String email;
     @Column(nullable = false, length = 250)
     private String name;
-    @Formula(value = "(SELECT CASE WHEN AVG(m.mark) IS NULL THEN 0.0 ELSE AVG(m.mark) END " +
-            "FROM marks AS m JOIN events AS e ON m.event_id = e.id " +
-            "WHERE e.initiator_id = id)")
-    private double rating;
 
     @Override
     public boolean equals(Object o) {

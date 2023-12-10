@@ -5,13 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.Length;
 import ru.practicum.validation.ValidEventDate;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Data
@@ -20,12 +20,12 @@ import java.time.LocalDateTime;
 @Builder
 public class NewEventDto {
     @NotBlank
-    @Length(min = 20, max = 2000, message = "Event annotation length must be between 20 and 2000 characters")
+    @Size(min = 20, max = 2000, message = "Event annotation length must be between 20 and 2000 characters")
     private String annotation;
     @NotNull
     private Long category;
     @NotBlank
-    @Length(min = 20, max = 7000, message = "Event description length must be between 20 and 7000 characters")
+    @Size(min = 20, max = 7000, message = "Event description length must be between 20 and 7000 characters")
     private String description;
     @NotNull
     @ValidEventDate
@@ -40,6 +40,6 @@ public class NewEventDto {
     @Builder.Default
     private boolean requestModeration = true;
     @NotBlank
-    @Length(min = 3, max = 120, message = "Event title length must be between 3 and 120 characters")
+    @Size(min = 3, max = 120, message = "Event title length must be between 3 and 120 characters")
     private String title;
 }

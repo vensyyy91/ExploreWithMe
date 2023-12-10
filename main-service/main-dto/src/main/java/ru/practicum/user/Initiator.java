@@ -1,12 +1,13 @@
 package ru.practicum.user;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-@Builder
-public class UserDto {
+@AllArgsConstructor
+public class Initiator {
     private Long id;
     private String name;
     private String email;
+    private double rating;
 }
