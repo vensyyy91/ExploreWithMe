@@ -49,6 +49,8 @@ public class Event {
     private Integer participantLimit;
     @Column(name = "published_on")
     private LocalDateTime publishedOn;
+    @Transient
+    private double rating;
     @Column(name = "request_moderation", nullable = false)
     private Boolean requestModeration;
     @Enumerated(EnumType.STRING)

@@ -3,6 +3,7 @@ package ru.practicum.event;
 import ru.practicum.request.EventRequestStatusUpdateRequest;
 import ru.practicum.request.EventRequestStatusUpdateResult;
 import ru.practicum.request.ParticipationRequestDto;
+import ru.practicum.user.Initiator;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
@@ -20,7 +21,7 @@ public interface EventService {
 
     EventFullDto updateEventByAdmin(long eventId, UpdateEventAdminRequest updateEventAdminRequest);
 
-    List<EventFullDto> getPublishedEvents(String text,
+    List<EventShortDto> getPublishedEvents(String text,
                                           Set<Long> categories,
                                           Boolean paid,
                                           LocalDateTime rangeStart,
@@ -46,4 +47,6 @@ public interface EventService {
     EventRequestStatusUpdateResult updateUserEventRequestsStatus(long userId,
                                                                  long eventId,
                                                                  EventRequestStatusUpdateRequest request);
+
+    List<Initiator> getTopEventInitiators(int from, int size);
 }
